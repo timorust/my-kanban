@@ -3,6 +3,13 @@
 <section>
 
 <header>
+
+  <button (click)="logIn()" *ngIf="!user">Log-In</button>
+  <ng-container *ngIf="user">
+    HI {{user.name}}! <button (click)="logOutAll()">Log-Out</button>
+  </ng-container>
+
+
   <button mat-button [matMenuTriggerFor]="userMenu">Menu</button>
   <mat-menu #userMenu="matMenu">
     <button *ngFor="let menu of userMenuItem" mat-menu-item>

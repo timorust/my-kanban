@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {AuthService} from "./services/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  title: 'app-root';
 
   userMenuItem: any[] = [
       {
@@ -35,12 +37,41 @@ export class AppComponent {
     inProgress: [],
     revision: [],
     finish: []
-  }
+  };
 
 
-  constructor(private matSnackBar:MatSnackBar) {
+  user;
+
+  constructor(private matSnackBar:MatSnackBar,
+              private authService:AuthService) {
     this.importFromLocalStorage();
   }
+
+  logIn() {
+    this.authService.register().then((credential) => {
+
+      this.authService.authUser.subscribe((userDoc: any | null) => {
+        if(userDoc === undefined) {
+          return this.authService.createDoc({
+            uid: credential.user.uid,
+            name: credential.user.displayName,
+            email: credential.user.email,
+            photoUrl: credential.user.photoURL
+          });
+        }
+        else {
+          this.user = userDoc;
+        }
+      });
+    })
+  }
+
+
+  logOutAll() {
+    this.authService.logOut();
+  }
+
+
 
   drop(event: CdkDragDrop<string []>) {
     if (event.previousContainer === event.container) {
@@ -84,39 +115,6 @@ export class AppComponent {
       this.saveInLocalStorage();
     },10000);
   }
-
-
-
-
-
-
-
-
-  // autoSaveTimer: number = 0;
-  // autoSaveTimeout = null;
-  // autoSaveTimerInterval = null;
-  //
-  // autoSaveData() {
-  //   if(this.autoSaveTimerInterval) {
-  //     clearInterval(this.autoSaveTimerInterval);
-  //     this.autoSaveTimer = 0;
-  //   }
-  //   this.autoSaveTimerInterval = setInterval(() => {
-  //     ++this.autoSaveTimer;
-  //
-  //         if(this.autoSaveTimerInterval >= 100) {
-  //           this.autoSaveTimer = 0;
-  //           clearInterval(this.autoSaveTimerInterval);
-  //         }
-  //       },100);
-  //
-  //
-  //   if(this.autoSaveTimeout) clearTimeout(this.autoSaveTimeout);
-  //   this.autoSaveTimeout = setTimeout(() => {
-  //     this.saveInLocalStorage();
-  //   },10000);
-  // }
-
 
   saveInLocalStorage() {
     const dataString = JSON.stringify(this.kanbanBoard);

@@ -8,6 +8,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {AngularFireModule} from "@angular/fire";
+import {environment} from "../environments/environment";
 
 
 
@@ -24,7 +26,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatIconModule,
     DragDropModule,
     MatSnackBarModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [],
   bootstrap: [AppComponent]
