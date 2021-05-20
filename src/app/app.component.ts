@@ -69,7 +69,7 @@ export class AppComponent {
 
 
   logOutAll() {
-    this.authService.logOut();
+    this.authService.logOut().then(r => console.log(r)).catch(e => console.log('e'));
   }
 
 
