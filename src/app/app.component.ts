@@ -56,7 +56,8 @@ export class AppComponent {
             uid: credential.user.uid,
             name: credential.user.displayName,
             email: credential.user.email,
-            photoUrl: credential.user.photoURL
+            photoUrl: credential.user.photoURL,
+            board: this.kanbanBoard
           });
         }
         else {
