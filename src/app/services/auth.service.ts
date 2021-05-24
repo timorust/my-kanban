@@ -11,14 +11,13 @@ import {AngularFirestore} from "@angular/fire/firestore";
 export class AuthService {
 
   authUser: any;
-
   constructor(private angularFireAuth:AngularFireAuth,
               private angularFirestore:AngularFirestore) {
 
     this.authUser = this.angularFireAuth.authState.pipe(
-      switchMap(project => {
-        if(project) {
-          return this.angularFirestore.doc(`users/${project.uid}`).valueChanges();
+      switchMap(enterAuth => {
+        if(enterAuth) {
+          return this.angularFirestore.doc(`users/${enterAuth.uid}`).valueChanges();
 
         }
         else {
@@ -29,14 +28,27 @@ export class AuthService {
     )
   }
 
-
   register() {
     const provider = new firebase.auth.GoogleAuthProvider();
     return this.angularFireAuth.signInWithPopup(provider);
   }
 
-  createDoc(userObject) {
-    return this.angularFirestore.doc(`users/${userObject.uid}`).set(userObject);
+  createDoc(credentialAuth) {
+    return this.angularFirestore.doc(`users/${credentialAuth.uid}`).set({
+      uid: credentialAuth.uid,
+      name: credentialAuth.displayName,
+      email: credentialAuth.email,
+      photoUrl: credentialAuth.photoURL,
+      board:  {
+        todos: [
+          'Learn Full Stack',
+          'Master Angular'
+        ],
+        inProgress: [],
+        revision: [],
+        finish: []
+      }
+    });
 
   }
   logOut() {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {AuthService} from "./services/auth.service";
+import {CoreService} from "./services/core.service";
 
 @Component({
   selector: 'app-root',
@@ -30,10 +31,7 @@ export class AppComponent {
   ];
 
   kanbanBoard = {
-    todos: [
-      'Learn Full Stack',
-      'Master Angular'
-    ],
+    todos: [],
     inProgress: [],
     revision: [],
     finish: []
@@ -41,38 +39,37 @@ export class AppComponent {
 
 
   user;
-
+  subUser;
   constructor(private matSnackBar:MatSnackBar,
-              private authService:AuthService) {
-    this.importFromLocalStorage();
+              private authService:AuthService,
+              private coreService:CoreService) {
+    this.checkUser(null);
+  }
+
+  checkUser(credential) {
+    if(this.subUser) {this.subUser.unsubscribe();}
+    this.subUser = this.authService.authUser.subscribe(async (userDoc: any | null) => {
+      if(userDoc === undefined || userDoc === null) {
+        this.user = await this.authService.createDoc(credential);
+      }
+      else {
+        this.user = userDoc;
+        this.kanbanBoard = userDoc.board;
+        console.log(userDoc);
+      }
+    });
   }
 
   logIn() {
+    if(this.subUser) {this.subUser.unsubscribe();}
     this.authService.register().then((credential) => {
-
-      this.authService.authUser.subscribe((userDoc: any | null) => {
-        if(userDoc === undefined) {
-          return this.authService.createDoc({
-            uid: credential.user.uid,
-            name: credential.user.displayName,
-            email: credential.user.email,
-            photoUrl: credential.user.photoURL,
-            board: this.kanbanBoard
-          });
-        }
-        else {
-          this.user = userDoc;
-        }
-      });
+      this.checkUser(credential.user);
     })
   }
-
 
   logOutAll() {
     this.authService.logOut().then(r => console.log(r)).catch(e => console.log('e'));
   }
-
-
 
   drop(event: CdkDragDrop<string []>) {
     if (event.previousContainer === event.container) {
@@ -89,7 +86,6 @@ export class AppComponent {
 
   autoSaveTimerInterval = null;
   autoSaveTimer: number = 0;
-
   autoSaveTimeout = null;
 
   autoSaveData() {
@@ -113,20 +109,17 @@ export class AppComponent {
       clearTimeout(this.autoSaveTimeout);
     }
     this.autoSaveTimeout = setTimeout(() => {
-      this.saveInLocalStorage();
+      return this.saveStorage();
     },10000);
   }
 
-  saveInLocalStorage() {
-    const dataString = JSON.stringify(this.kanbanBoard);
-    localStorage.setItem('my-kanban', dataString);
+ async saveStorage() {
+    await this.coreService.saveBoard(this.user.uid, this.kanbanBoard);
     this.matSnackBar.open('Saved Success!', 'Done', { duration: 3000 });
   }
 
-  importFromLocalStorage() {
-    const dataImport = localStorage.getItem('my-kanban');
-    if(!dataImport) { return }
-      const dataObject = JSON.parse(dataImport);
-      this.kanbanBoard = dataObject;
+  removeItem(taskColumn, task) {
+    return this.coreService.removeTasks(this.user.uid, taskColumn, task);
   }
+
 }

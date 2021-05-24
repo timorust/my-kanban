@@ -10,13 +10,17 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {AngularFireModule} from "@angular/fire";
 import {environment} from "../environments/environment";
+import { AddTaskComponent } from './components/add-task/add-task.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from '@angular/material/input';
 
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AddTaskComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +31,10 @@ import {environment} from "../environments/environment";
     DragDropModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

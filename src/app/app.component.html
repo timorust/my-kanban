@@ -21,6 +21,8 @@
 
   <h1>The Kanban Board</h1>
 
+  <ak-add-task *ngIf="user" [serviceUser]="user"></ak-add-task>
+
   <main>
 
     <div>
@@ -32,7 +34,10 @@
         [cdkDropListConnectedTo]="[inProgressList]"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of kanbanBoard.todos" cdkDrag>{{item}}</div>
+        <div class="example-box" *ngFor="let item of kanbanBoard.todos" cdkDrag>
+          {{item}}
+          <button (click)="removeItem('todos', item)">X</button>
+        </div>
       </div>
     </div>
 
@@ -46,7 +51,10 @@
         [cdkDropListConnectedTo]="[todoList, revisionList]"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of kanbanBoard.inProgress" cdkDrag>{{item}}</div>
+        <div class="example-box" *ngFor="let item of kanbanBoard.inProgress" cdkDrag>
+          {{item}}
+          <button (click)="removeItem('inProgress', item)">X</button>
+        </div>
       </div>
     </div>
 
@@ -59,7 +67,10 @@
         [cdkDropListConnectedTo]="[finishList, inProgressList]"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of kanbanBoard.revision" cdkDrag>{{item}}</div>
+        <div class="example-box" *ngFor="let item of kanbanBoard.revision" cdkDrag>
+          {{item}}
+          <button (click)="removeItem('revision', item)">X</button>
+        </div>
       </div>
     </div>
 
@@ -72,13 +83,11 @@
         [cdkDropListConnectedTo]="revisionList"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of kanbanBoard.finish" cdkDrag>{{item}}</div>
+        <div class="example-box" *ngFor="let item of kanbanBoard.finish" cdkDrag>
+          {{item}}
+          <button (click)="removeItem('finish', item)">X</button>
+        </div>
       </div>
     </div>
-
-
-
   </main>
-
-
 </section>
