@@ -4,13 +4,13 @@
 
 <header>
 
-  <button (click)="logIn()" *ngIf="!user">Log-In</button>
+  <button  mat-button color="primary" (click)="logIn()" *ngIf="!user">Log-In</button>
   <ng-container *ngIf="user">
-    HI {{user.name}}! <button (click)="logOutAll()">Log-Out</button>
+    HI {{user.name}}! <button mat-button color="accent" (click)="logOutAll()">Log-Out</button>
   </ng-container>
 
 
-  <button mat-button [matMenuTriggerFor]="userMenu">Menu</button>
+  <button mat-stroked-button color="accent" [matMenuTriggerFor]="userMenu">Menu</button>
   <mat-menu #userMenu="matMenu">
     <button *ngFor="let menu of userMenuItem" mat-menu-item>
       <mat-icon>{{menu.icon}}</mat-icon>

@@ -1,0 +1,8 @@
+button {
+  margin: 0 0 .5rem .5rem;
+}
+
+::ng-deep.custom-style {
+  background: #06d6a0;
+  color: #fee440;
+}

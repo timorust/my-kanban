@@ -6,10 +6,10 @@ section {
   header {
     background: rgba(0,0,0,.2);
     margin: 0 0 2rem 0;
-
   }
   h1 {
     font-size: 2.5rem;
+    color: blue;
   }
 
   main {
@@ -17,6 +17,10 @@ section {
     grid-template-columns: repeat(auto-fill, minmax(193px, 1fr));
     gap: 25px;
   }
+}
+
+.matSnackBar {
+  color: greenyellow;
 }
 
 

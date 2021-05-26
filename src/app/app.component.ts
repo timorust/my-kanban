@@ -49,12 +49,15 @@ export class AppComponent {
   checkUser(credential) {
     if(this.subUser) {this.subUser.unsubscribe();}
     this.subUser = this.authService.authUser.subscribe(async (userDoc: any | null) => {
-      if(userDoc === undefined || userDoc === null) {
+      if(userDoc === undefined) {
         this.user = await this.authService.createDoc(credential);
       }
       else {
         this.user = userDoc;
-        this.kanbanBoard = userDoc.board;
+        if(userDoc) {
+          this.kanbanBoard = userDoc.board;
+        }
+
         console.log(userDoc);
       }
     });
@@ -115,7 +118,8 @@ export class AppComponent {
 
  async saveStorage() {
     await this.coreService.saveBoard(this.user.uid, this.kanbanBoard);
-    this.matSnackBar.open('Saved Success!', 'Done', { duration: 3000 });
+    this.matSnackBar.open('Saved Success!', 'Done', { duration: 3000, panelClass: ["custom-style"]
+    });
   }
 
   removeItem(taskColumn, task) {
